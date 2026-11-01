@@ -1,0 +1,114 @@
+{
+  "question": "Vous avez des pagnes ? Combien ça fait en euros pour ma sœur à Paris ?",
+  "reponse": "Bonjour,\n\nNous avons des pagnes disponibles, notamment le *Pagne wax 6 yards* à 12 000 FCFA. Cependant, nous ne livrons pas à Paris. Les zones desservies sont :\n• Cotonou\n• Akpakpa\n• Fidjrossè\n• Calavi\n• Porto-Novo\n• Ouidah\n\nSouhaitez-vous des informations sur une autre zone ou un autre produit ?",
+  "resume": {
+    "duree_s": 14.94,
+    "nb_etapes": 9,
+    "appels_llm": 9,
+    "outils": [
+      "chercher_produits",
+      "frais_livraison"
+    ],
+    "tokens_entree": 5971,
+    "tokens_sortie": 561
+  },
+  "etapes": [
+    {
+      "type": "outil",
+      "agent": "vendeur",
+      "outil": "chercher_produits",
+      "arguments": {
+        "requete": "pagne"
+      },
+      "resultat": {
+        "resultats": [
+          {
+            "id": "P01",
+            "nom": "Pagne wax 6 yards",
+            "prix_xof": 12000,
+            "en_stock": true
+          }
+        ]
+      },
+      "duree_ms": 1,
+      "n": 1
+    },
+    {
+      "type": "delegation",
+      "agent": "gérant",
+      "vers": "vendeur",
+      "consigne": "Vérifier la disponibilité des pagnes en stock et fournir les prix en FCFA.",
+      "compte_rendu": "Voici les informations sur les pagnes disponibles :\n\n- **Référence** : P01\n  - **Nom** : Pagne wax 6 yards\n  - **Prix** : 12 000 FCFA\n  - **Stock** : Disponible\n\nSi vous avez besoin d'autres informations ou d'autres produits, n'hésitez pas à demander.",
+      "n": 2
+    },
+    {
+      "type": "outil",
+      "agent": "logisticien",
+      "outil": "frais_livraison",
+      "arguments": {
+        "zone": "Paris",
+        "articles": [
+          {
+            "produit_id": "P01",
+            "quantite": 1
+          }
+        ]
+      },
+      "resultat": {
+        "erreur": "zone non desservie",
+        "zone_demandee": "Paris",
+        "zones_desservies": [
+          "Cotonou",
+          "Akpakpa",
+          "Fidjrossè",
+          "Calavi",
+          "Porto-Novo",
+          "Ouidah"
+        ]
+      },
+      "duree_ms": 2,
+      "n": 3
+    },
+    {
+      "type": "delegation",
+      "agent": "gérant",
+      "vers": "logisticien",
+      "consigne": "Calculer les frais de livraison pour 1 Pagne wax 6 yards (P01) vers Paris, France. Inclure le total en FCFA et convertir en euros.",
+      "compte_rendu": "La zone \"Paris\" n'est pas desservie. Voici les zones desservies :\n\n- Cotonou\n- Akpakpa\n- Fidjrossè\n- Calavi\n- Porto-Novo\n- Ouidah",
+      "n": 4
+    },
+    {
+      "type": "redaction",
+      "agent": "rédacteur",
+      "detail": "305 caractères",
+      "n": 5
+    },
+    {
+      "type": "delegation",
+      "agent": "gérant",
+      "vers": "redacteur",
+      "consigne": "Informer le client que nous avons des pagnes disponibles, notamment le Pagne wax 6 yards au prix de 12 000 FCFA. Cependant, nous ne livrons pas à Paris, seulement dans certaines zones au Bénin. Les zones desservies sont Cotonou, Akpakpa, Fidjrossè, Calavi, Porto-Novo et Ouidah. Demander au client s'il souhaite des informations sur une autre zone ou un autre produit.",
+      "compte_rendu": "Message rédigé et envoyé au client.",
+      "n": 6
+    },
+    {
+      "type": "evaluation",
+      "agent": "règles",
+      "verdict": "✅ règles OK",
+      "detail": "",
+      "n": 7
+    },
+    {
+      "type": "evaluation",
+      "agent": "juge",
+      "verdict": "⚖️ ok (note 4/5)",
+      "detail": "La réponse est honnête et complète (pas de conversion inventée, zones listées), mais elle pourrait suggérer une étape concrète, par exemple que la sœur récupère la commande via un proche à Cotonou.",
+      "n": 8
+    },
+    {
+      "type": "reponse_finale",
+      "detail": "297 caractères",
+      "n": 9
+    }
+  ]
+}

@@ -3,8 +3,8 @@
             ┌──────────── Gérant (coordinateur, ne parle pas au client)
             │                 │                     │
      Vendeur              Logisticien           Rédacteur
-  chercher_produit      calculer_livraison    écrit le message
-  verifier_stock        convertir_devise      WhatsApp final
+  chercher_produits     frais_livraison       aucun outil : met en
+  verifier_stock        convertir_devise      forme la réponse WhatsApp
   creer_commande
 
 Chaque membre ne voit que SES outils. Le Rédacteur reçoit les résultats bruts des
@@ -30,12 +30,12 @@ def _delegation(nom: str, description: str) -> dict:
 
 
 SCHEMAS_GERANT = [
-    _delegation("deleguer_vendeur", "Produits, prix, stock, alternatives, enregistrement des commandes."),
-    _delegation("deleguer_logisticien", "Frais de livraison, total (articles + livraison), conversion de devises."),
-    _delegation("deleguer_redacteur", "Rédige le message WhatsApp final pour le client. À appeler en dernier."),
+    _delegation("demander_au_vendeur", "Vendeur : catalogue, prix, stock, alternatives, enregistrement des commandes."),
+    _delegation("demander_au_logisticien", "Logisticien : frais de livraison, total (articles + livraison), devises."),
+    _delegation("demander_au_redacteur", "Rédacteur : met en forme la réponse WhatsApp finale. À appeler en dernier."),
 ]
-OUTILS_VENDEUR = {"chercher_produit", "verifier_stock", "creer_commande"}
-OUTILS_LOGISTICIEN = {"calculer_livraison", "convertir_devise"}
+OUTILS_VENDEUR = {"chercher_produits", "verifier_stock", "creer_commande"}
+OUTILS_LOGISTICIEN = {"frais_livraison", "convertir_devise"}
 
 
 class EquipeBoutique:
@@ -47,6 +47,7 @@ class EquipeBoutique:
         self.max_steps_membre = max_steps_membre
         self.juge = juge
         self.seuil_juge = seuil_juge
+        self.tools.exiger_references_vues = True
 
     # ------------------------------------------------------------ membres
     async def _membre(self, nom: str, system: str, autorises: set[str], consigne: str,
@@ -103,19 +104,19 @@ class EquipeBoutique:
                     consigne = json.loads(appel["function"].get("arguments") or "{}").get("consigne", "")
                 except json.JSONDecodeError:
                     consigne = ""
-                if nom == "deleguer_redacteur":
+                if nom == "demander_au_redacteur":
                     consigne_finale = consigne
                     final = await self._rediger(historique, consigne, resultats, trace)
                     compte_rendu = "Message rédigé et envoyé au client."
-                elif nom == "deleguer_vendeur":
+                elif nom == "demander_au_vendeur":
                     compte_rendu = await self._membre("vendeur", SYSTEM_VENDEUR_EQUIPE, OUTILS_VENDEUR,
                                                       consigne, resultats, trace)
-                elif nom == "deleguer_logisticien":
+                elif nom == "demander_au_logisticien":
                     compte_rendu = await self._membre("logisticien", SYSTEM_LOGISTICIEN, OUTILS_LOGISTICIEN,
                                                       consigne, resultats, trace)
                 else:
                     compte_rendu = f"Membre inconnu : {nom}"
-                trace.ajouter(type="delegation", agent="gérant", vers=nom.replace("deleguer_", ""),
+                trace.ajouter(type="delegation", agent="gérant", vers=nom.replace("demander_au_", ""),
                               consigne=consigne, compte_rendu=compte_rendu)
                 messages.append({"role": "tool", "tool_call_id": appel["id"], "content": compte_rendu})
             if final is not None:
@@ -141,13 +142,20 @@ class EquipeBoutique:
         if self.juge is not None:
             avis = await self.juge.noter(historique, final, resultats)
             trace.compter(avis.get("usage"))
-            trace.ajouter(type="evaluation", agent="juge", verdict=f"⚖️ note {avis['note']}/5",
+            trace.ajouter(type="evaluation", agent="juge",
+                          verdict=f"⚖️ {avis.get('verdict', 'ok')} (note {avis['note']}/5)",
                           detail=avis.get("commentaire", ""))
-            if avis["note"] is not None and avis["note"] < self.seuil_juge:
+            if avis.get("verdict") == "pas encore":  # la critique est ajoutée au contexte du rédacteur
                 nouveau = await self._rediger(historique, consigne_finale, resultats, trace,
-                                              f"Un relecteur a noté {avis['note']}/5 : {avis['commentaire']}")
-                if evaluer_regles(nouveau, resultats, client)["ok"]:
+                                              f"L'évaluateur dit « pas encore » : {avis['commentaire']}")
+                ev2 = evaluer_regles(nouveau, resultats, client)
+                trace.ajouter(type="evaluation", agent="règles", verdict="✅ règles OK" if ev2["ok"] else "❌ règles",
+                              detail=" | ".join(ev2["problemes"]))
+                if ev2["ok"]:
                     final = nouveau
+                else:  # une réponse rejetée par le juge n'est jamais envoyée (même politique que l'agent seul)
+                    trace.ajouter(type="reponse_finale", detail="message de vérification (rejet du juge non corrigé)")
+                    return ReponseAgent(MESSAGE_VERIFICATION, trace)
 
         final = formater_whatsapp(final)
         trace.ajouter(type="reponse_finale", detail=f"{len(final)} caractères")

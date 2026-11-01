@@ -1,0 +1,249 @@
+{
+  "question": "Je m'appelle Afi. Je veux 2 robes en wax et 1 sac en raphia, livrés à Calavi.",
+  "reponse": "Je suis désolée, je n'arrive pas à finaliser votre demande pour le moment. Je transmets à la gérante qui vous répondra rapidement 🙏",
+  "resume": {
+    "duree_s": 16.52,
+    "nb_etapes": 11,
+    "appels_llm": 8,
+    "outils": [
+      "chercher_produits",
+      "chercher_produits",
+      "verifier_stock",
+      "frais_livraison",
+      "frais_livraison",
+      "verifier_stock",
+      "frais_livraison"
+    ],
+    "tokens_entree": 16770,
+    "tokens_sortie": 565
+  },
+  "etapes": [
+    {
+      "type": "outil",
+      "agent": "vendeuse",
+      "outil": "chercher_produits",
+      "arguments": {
+        "requete": "robe en wax"
+      },
+      "resultat": {
+        "resultats": [
+          {
+            "id": "P05",
+            "nom": "Robe en wax",
+            "prix_xof": 22000,
+            "en_stock": true
+          }
+        ]
+      },
+      "duree_ms": 1,
+      "n": 1
+    },
+    {
+      "type": "outil",
+      "agent": "vendeuse",
+      "outil": "chercher_produits",
+      "arguments": {
+        "requete": "sac en raphia"
+      },
+      "resultat": {
+        "resultats": [
+          {
+            "id": "P03",
+            "nom": "Sac en raphia",
+            "prix_xof": 7500,
+            "en_stock": false,
+            "rupture": true,
+            "alternatives": [
+              {
+                "id": "P04",
+                "nom": "Sandales en cuir",
+                "prix_xof": 9000,
+                "stock_disponible": 8
+              }
+            ]
+          }
+        ]
+      },
+      "duree_ms": 0,
+      "n": 2
+    },
+    {
+      "type": "outil",
+      "agent": "vendeuse",
+      "outil": "verifier_stock",
+      "arguments": {
+        "produit_id": "P05",
+        "quantite": 2
+      },
+      "resultat": {
+        "produit_id": "P05",
+        "nom": "Robe en wax",
+        "prix_xof": 22000,
+        "quantite_demandee": 2,
+        "stock_disponible": 5,
+        "disponible": true
+      },
+      "duree_ms": 1,
+      "n": 3
+    },
+    {
+      "type": "outil",
+      "agent": "vendeuse",
+      "outil": "frais_livraison",
+      "arguments": {
+        "zone": "Calavi",
+        "articles": [
+          {
+            "produit_id": "P05",
+            "quantite": 2
+          }
+        ]
+      },
+      "resultat": {
+        "zone": "Calavi",
+        "frais_livraison_xof": 2000,
+        "delai": "24 à 48 h",
+        "lignes": [
+          {
+            "produit_id": "P05",
+            "nom": "Robe en wax",
+            "quantite": 2,
+            "prix_unitaire_xof": 22000,
+            "montant_xof": 44000
+          }
+        ],
+        "sous_total_articles_xof": 44000,
+        "total_xof": 46000
+      },
+      "duree_ms": 1,
+      "n": 4
+    },
+    {
+      "type": "evaluation",
+      "agent": "règles",
+      "verdict": "❌ règles",
+      "detail": "Donne aussi le prix de Sac en raphia (7500 FCFA), puis signale la rupture et propose l'alternative.",
+      "n": 5
+    },
+    {
+      "type": "outil",
+      "agent": "vendeuse",
+      "outil": "frais_livraison",
+      "arguments": {
+        "zone": "Calavi",
+        "articles": [
+          {
+            "produit_id": "P05",
+            "quantite": 2
+          }
+        ]
+      },
+      "resultat": {
+        "zone": "Calavi",
+        "frais_livraison_xof": 2000,
+        "delai": "24 à 48 h",
+        "lignes": [
+          {
+            "produit_id": "P05",
+            "nom": "Robe en wax",
+            "quantite": 2,
+            "prix_unitaire_xof": 22000,
+            "montant_xof": 44000
+          }
+        ],
+        "sous_total_articles_xof": 44000,
+        "total_xof": 46000
+      },
+      "duree_ms": 1,
+      "n": 6
+    },
+    {
+      "type": "outil",
+      "agent": "vendeuse",
+      "outil": "verifier_stock",
+      "arguments": {
+        "produit_id": "P03"
+      },
+      "resultat": {
+        "produit_id": "P03",
+        "nom": "Sac en raphia",
+        "prix_xof": 7500,
+        "quantite_demandee": 1,
+        "stock_disponible": 0,
+        "disponible": false,
+        "alternatives": [
+          {
+            "id": "P04",
+            "nom": "Sandales en cuir",
+            "prix_xof": 9000,
+            "stock_disponible": 8
+          }
+        ]
+      },
+      "duree_ms": 0,
+      "n": 7
+    },
+    {
+      "type": "evaluation",
+      "agent": "règles",
+      "verdict": "✅ règles OK",
+      "detail": "",
+      "n": 8
+    },
+    {
+      "type": "evaluation",
+      "agent": "juge",
+      "verdict": "⚖️ pas encore (note 2/5)",
+      "detail": "Le total annoncé (46 000 FCFA) ne correspond pas aux articles listés : le sac en rupture est inclus dans le récapitulatif mais pas dans le total, ce qui est incohérent ; de plus, si l'alternative est proposée, le total devrait refléter soit uniquement les robes (46 000), soit les robes + sandales, mais pas inclure un article en rupture dans la liste sans cohérence avec le montant.",
+      "n": 9
+    },
+    {
+      "type": "outil",
+      "agent": "vendeuse",
+      "outil": "frais_livraison",
+      "arguments": {
+        "zone": "Calavi",
+        "articles": [
+          {
+            "produit_id": "P05",
+            "quantite": 2
+          },
+          {
+            "produit_id": "P04",
+            "quantite": 1
+          }
+        ]
+      },
+      "resultat": {
+        "zone": "Calavi",
+        "frais_livraison_xof": 2000,
+        "delai": "24 à 48 h",
+        "lignes": [
+          {
+            "produit_id": "P05",
+            "nom": "Robe en wax",
+            "quantite": 2,
+            "prix_unitaire_xof": 22000,
+            "montant_xof": 44000
+          },
+          {
+            "produit_id": "P04",
+            "nom": "Sandales en cuir",
+            "quantite": 1,
+            "prix_unitaire_xof": 9000,
+            "montant_xof": 9000
+          }
+        ],
+        "sous_total_articles_xof": 53000,
+        "total_xof": 55000
+      },
+      "duree_ms": 1,
+      "n": 10
+    },
+    {
+      "type": "limite_atteinte",
+      "detail": "max_steps=8",
+      "n": 11
+    }
+  ]
+}

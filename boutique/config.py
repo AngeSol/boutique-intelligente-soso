@@ -22,6 +22,7 @@ class Settings:
     juge_model: str
     prix_entree_1m: float       # USD par million de tokens d'entrée (pour le tableau de comparaison)
     prix_sortie_1m: float
+    rodi_par_usd: float         # conversion USD → RODI (crédits RodiumAI)
     green_api_url: str
     green_id_instance: str
     green_api_token: str
@@ -42,11 +43,12 @@ class Settings:
             api_key=g("RODIUM_API_KEY"),
             base_url=g("RODIUM_BASE_URL", "https://api.rodiumai.io/v1").rstrip("/"),
             model=model,
-            max_steps=int(g("MAX_STEPS", "6")),
+            max_steps=int(g("MAX_STEPS", "8")),
             juge_actif=g("JUGE_ACTIF", "1") not in ("0", "false", "non", ""),
             juge_model=g("JUGE_MODEL") or model,
             prix_entree_1m=float(g("PRIX_ENTREE_1M_USD", "0.15")),
             prix_sortie_1m=float(g("PRIX_SORTIE_1M_USD", "0.60")),
+            rodi_par_usd=float(g("RODI_PAR_USD", "757.6")),
             green_api_url=g("GREEN_API_URL", "https://api.green-api.com").rstrip("/"),
             green_id_instance=g("GREEN_ID_INSTANCE"),
             green_api_token=g("GREEN_API_TOKEN"),

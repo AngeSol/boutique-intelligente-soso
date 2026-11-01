@@ -1,0 +1,159 @@
+{
+  "question": "Je suis Koffi à Porto-Novo. Combien me coûtent 3 pots de beurre de karité livrés, et ça fait combien en nairas ?",
+  "reponse": "Bonjour Koffi, pour votre demande de 3 pots de beurre de karité, le coût total est de *13 500 FCFA*, ce qui équivaut à *≈ 30 869,80 Naira*. La livraison est prévue dans un délai de 24 à 48 heures. Souhaitez-vous confirmer votre commande ?",
+  "resume": {
+    "duree_s": 16.93,
+    "nb_etapes": 11,
+    "appels_llm": 11,
+    "outils": [
+      "chercher_produits",
+      "verifier_stock",
+      "frais_livraison",
+      "convertir_devise"
+    ],
+    "tokens_entree": 8010,
+    "tokens_sortie": 606
+  },
+  "etapes": [
+    {
+      "type": "outil",
+      "agent": "vendeur",
+      "outil": "chercher_produits",
+      "arguments": {
+        "requete": "beurre de karité"
+      },
+      "resultat": {
+        "resultats": [
+          {
+            "id": "P06",
+            "nom": "Beurre de karité 500 g",
+            "prix_xof": 3500,
+            "en_stock": true
+          }
+        ]
+      },
+      "duree_ms": 1,
+      "n": 1
+    },
+    {
+      "type": "outil",
+      "agent": "vendeur",
+      "outil": "verifier_stock",
+      "arguments": {
+        "produit_id": "P06",
+        "quantite": 3
+      },
+      "resultat": {
+        "produit_id": "P06",
+        "nom": "Beurre de karité 500 g",
+        "prix_xof": 3500,
+        "quantite_demandee": 3,
+        "stock_disponible": 40,
+        "disponible": true
+      },
+      "duree_ms": 0,
+      "n": 2
+    },
+    {
+      "type": "delegation",
+      "agent": "gérant",
+      "vers": "vendeur",
+      "consigne": "Vérifier le prix unitaire des pots de beurre de karité et la disponibilité pour une commande de 3 pots.",
+      "compte_rendu": "Résumé de la disponibilité et du prix :\n\n- **Référence** : P06\n- **Nom** : Beurre de karité 500 g\n- **Prix unitaire** : 3500 FCFA\n- **Stock disponible** : 40 pots\n\nLa commande de 3 pots est possible.",
+      "n": 3
+    },
+    {
+      "type": "outil",
+      "agent": "logisticien",
+      "outil": "frais_livraison",
+      "arguments": {
+        "zone": "Porto-Novo",
+        "articles": [
+          {
+            "produit_id": "P06",
+            "quantite": 3
+          }
+        ]
+      },
+      "resultat": {
+        "zone": "Porto-Novo",
+        "frais_livraison_xof": 3000,
+        "delai": "24 à 48 h",
+        "lignes": [
+          {
+            "produit_id": "P06",
+            "nom": "Beurre de karité 500 g",
+            "quantite": 3,
+            "prix_unitaire_xof": 3500,
+            "montant_xof": 10500
+          }
+        ],
+        "sous_total_articles_xof": 10500,
+        "total_xof": 13500
+      },
+      "duree_ms": 1,
+      "n": 4
+    },
+    {
+      "type": "outil",
+      "agent": "logisticien",
+      "outil": "convertir_devise",
+      "arguments": {
+        "montant": 13500,
+        "devise_cible": "NGN"
+      },
+      "resultat": {
+        "montant_source": 13500,
+        "devise_source": "XOF",
+        "montant_converti": 30869.8,
+        "devise_cible": "NGN",
+        "taux": 2.286652,
+        "date_taux": "Sun, 01 Nov 2026 00:02:31 +0000",
+        "source_taux": "open.er-api.com"
+      },
+      "duree_ms": 217,
+      "n": 5
+    },
+    {
+      "type": "delegation",
+      "agent": "gérant",
+      "vers": "logisticien",
+      "consigne": "Calculer les frais de livraison et le total pour 3 pots de beurre de karité (référence P06) livrés à Porto-Novo. Convertir le total en nairas.",
+      "compte_rendu": "Résumé de la commande :\n\n- **Zone** : Porto-Novo\n- **Délai** : 24 à 48 h\n- **Sous-total** : 10 500 XOF\n- **Frais de livraison** : 3 000 XOF\n- **TOTAL** : 13 500 XOF\n- **Montant converti** : 30 869,80 NGN\n- **Taux** : 2,286652",
+      "n": 6
+    },
+    {
+      "type": "redaction",
+      "agent": "rédacteur",
+      "detail": "238 caractères",
+      "n": 7
+    },
+    {
+      "type": "delegation",
+      "agent": "gérant",
+      "vers": "redacteur",
+      "consigne": "Préparer un message pour Koffi à Porto-Novo : Bonjour Koffi, pour votre demande de 3 pots de beurre de karité, le coût total est de 13 500 FCFA, ce qui équivaut à environ 30 869,80 Naira. La livraison est prévue dans un délai de 24 à 48 heures. Souhaitez-vous confirmer votre commande ?",
+      "compte_rendu": "Message rédigé et envoyé au client.",
+      "n": 8
+    },
+    {
+      "type": "evaluation",
+      "agent": "règles",
+      "verdict": "✅ règles OK",
+      "detail": "",
+      "n": 9
+    },
+    {
+      "type": "evaluation",
+      "agent": "juge",
+      "verdict": "⚖️ ok (note 5/5)",
+      "detail": "Tous les chiffres sont conformes aux données outils, la réponse est concise, chaleureuse et invite clairement à confirmer la commande.",
+      "n": 10
+    },
+    {
+      "type": "reponse_finale",
+      "detail": "238 caractères",
+      "n": 11
+    }
+  ]
+}

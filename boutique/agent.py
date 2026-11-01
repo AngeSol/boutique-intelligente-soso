@@ -2,7 +2,7 @@
 
 Boucle : le LLM choisit des outils → on les exécute → on recommence, jusqu'à une réponse.
 Garde-fous :
-- limite d'étapes (MAX_STEPS) : nombre maximal d'appels LLM par message client ;
+- limite d'étapes (MAX_STEPS, 8 par défaut) : nombre maximal d'appels LLM par message client ;
 - trace lisible de chaque étape (agent, outil, arguments, résultat, durée, tokens) ;
 - évaluation avant de répondre : règles en code (chiffres sourcés, total) puis LLM juge (optionnel).
 """
@@ -13,7 +13,8 @@ import time
 from dataclasses import dataclass, field
 from pathlib import Path
 
-from .evaluation import chiffres_non_sources, evaluer_regles, formater_whatsapp  # noqa: F401
+from .evaluation import (_CONFIRMATION, articles_du_recap, chiffres_non_sources, evaluer_regles,  # noqa: F401
+                         formater_whatsapp, total_du_recap)
 from .prompts import CORRECTION, NUMERO_CONNU, REECRITURE_JUGE, SYSTEM_VENDEUR
 from .tools import SCHEMAS, Toolbox
 
@@ -96,19 +97,20 @@ class ReponseAgent:
     def memo(self) -> str:
         """Note interne : les produits vérifiés pendant ce message (identifiants, quantités, zone).
         Gardée dans l'historique pour le LLM, jamais montrée au client."""
-        produits, zone = {}, None
+        produits, zone, total = {}, None, None
         for e in self.trace.etapes:
             if e["type"] != "outil" or "erreur" in e["resultat"]:
                 continue
             r = e["resultat"]
             if e["outil"] == "verifier_stock":
                 produits.setdefault(r["produit_id"], f"{r['produit_id']} = {r['nom']}")
-            elif e["outil"] == "calculer_livraison":
+            elif e["outil"] == "frais_livraison" or (e["outil"] == "creer_commande" and "lignes" in r):
                 zone = r["zone"]
-                for l in r["lignes"]:
+                total = r.get("total_xof", total)
+                for l in r.get("lignes", []):
                     produits[l["produit_id"]] = (f"{l['produit_id']} = {l['nom']} × {l['quantite']} "
                                                  f"({l['prix_unitaire_xof']} FCFA l'unité)")
-            elif e["outil"] == "creer_commande" and "commande_id" in r:
+            if e["outil"] == "creer_commande" and "commande_id" in r:
                 produits["_cmd"] = f"commande {r['commande_id']} : {r['statut']}"
         if not produits and not zone:
             return ""
@@ -116,6 +118,8 @@ class ReponseAgent:
         txt = "Produits du récapitulatif : " + " ; ".join(lignes) if lignes else ""
         if zone:
             txt += f" · zone de livraison : {zone}"
+        if total is not None:
+            txt += f" · total annoncé : {total} FCFA"
         if "_cmd" in produits:
             txt += f" · {produits['_cmd']}"
         return txt.strip(" ·")
@@ -178,14 +182,15 @@ def textes_du_client(historique: list[dict]) -> list[str]:
 
 # ---------------------------------------------------------------- agent seul
 class AgentVendeur:
-    def __init__(self, llm, toolbox: Toolbox, max_steps: int = 6, system_prompt: str = SYSTEM_VENDEUR,
-                 juge=None, seuil_juge: int = 3):
+    def __init__(self, llm, toolbox: Toolbox, max_steps: int = 8, system_prompt: str = SYSTEM_VENDEUR,
+                 juge=None, seuil_juge: int = 3, max_corrections: int = 2):
         self.llm = llm
         self.tools = toolbox
         self.max_steps = max_steps
         self.system_prompt = system_prompt
         self.juge = juge            # JugeLLM ou None
         self.seuil_juge = seuil_juge
+        self.max_corrections = max_corrections  # corrections après un échec des règles en code
 
     async def repondre(self, historique: list[dict]) -> ReponseAgent:
         """historique = messages user/assistant (sans le system), le dernier étant celui du client."""
@@ -196,11 +201,15 @@ class AgentVendeur:
         messages = [{"role": "system", "content": system}, *pour_le_llm(historique)]
         trace, resultats = Trace(), []
         client = textes_du_client(historique)
-        correction_faite = reecriture_faite = False
+        recap = total_du_recap(historique)
+        if client and _CONFIRMATION.search(client[-1]):  # « oui » ⇒ creer_commande n'accepte que ces articles
+            self.tools.recap_confirme = articles_du_recap(historique) or None
+        corrections, reecriture_faite = 0, False
         dernier_bon: str | None = None
+        appels_juge = 0  # le juge ne consomme pas le budget d'étapes de l'agent (il reste compté dans le coût)
 
         while True:
-            budget = self.max_steps - trace.appels_llm
+            budget = self.max_steps - (trace.appels_llm - appels_juge)
             texte = await boucle_outils(self.llm, messages, SCHEMAS, self.tools.run, budget,
                                         trace, "vendeuse", resultats) if budget > 0 else None
             if texte is None:  # limite d'étapes atteinte
@@ -208,14 +217,14 @@ class AgentVendeur:
                 return ReponseAgent(dernier_bon or MESSAGE_LIMITE, trace)
 
             # 1) règles en code
-            ev = evaluer_regles(texte, resultats, client)
+            ev = evaluer_regles(texte, resultats, client, recap)
             trace.ajouter(type="evaluation", agent="règles", verdict="✅ règles OK" if ev["ok"] else "❌ règles",
                           detail=" | ".join(ev["problemes"]))
             if not ev["ok"]:
-                if correction_faite:
+                if corrections >= self.max_corrections:
                     trace.ajouter(type="reponse_finale", detail="message de vérification (échec après correction)")
                     return ReponseAgent(dernier_bon or MESSAGE_VERIFICATION, trace)
-                correction_faite = True
+                corrections += 1
                 messages += [{"role": "assistant", "content": texte},
                              {"role": "user", "content": CORRECTION.format(problemes="\n".join(ev["problemes"]))}]
                 continue
@@ -225,10 +234,13 @@ class AgentVendeur:
             if self.juge is not None and not reecriture_faite:
                 avis = await self.juge.noter(historique, texte, resultats)
                 trace.compter(avis.get("usage"))
-                trace.ajouter(type="evaluation", agent="juge", verdict=f"⚖️ note {avis['note']}/5",
+                appels_juge += 1
+                trace.ajouter(type="evaluation", agent="juge",
+                              verdict=f"⚖️ {avis.get('verdict', 'ok')} (note {avis['note']}/5)",
                               detail=avis.get("commentaire", ""))
-                if avis["note"] is not None and avis["note"] < self.seuil_juge:
+                if avis.get("verdict") == "pas encore":  # la critique est ajoutée au contexte, l'agent recommence
                     reecriture_faite = True
+                    dernier_bon = None  # une réponse rejetée par le juge n'est jamais envoyée
                     messages += [{"role": "assistant", "content": texte},
                                  {"role": "user", "content": REECRITURE_JUGE.format(**avis)}]
                     continue

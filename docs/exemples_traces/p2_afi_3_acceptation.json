@@ -1,0 +1,195 @@
+{
+  "question": "oui je confirme",
+  "reponse": "Votre commande a été validée par Afi ! Voici les détails :\n\n• *2 Robes en wax* à 22 000 FCFA chacune\n• *Frais de livraison* à Calavi : 2 000 FCFA\n• *Total : 46 000 FCFA* (livraison incluse)\n\nMerci pour votre commande ! Vous serez livré sous 24 à 48 heures.",
+  "resume": {
+    "duree_s": 26.14,
+    "nb_etapes": 9,
+    "appels_llm": 7,
+    "outils": [
+      "verifier_stock",
+      "verifier_stock",
+      "frais_livraison",
+      "frais_livraison",
+      "creer_commande"
+    ],
+    "tokens_entree": 17351,
+    "tokens_sortie": 521
+  },
+  "etapes": [
+    {
+      "type": "outil",
+      "agent": "vendeuse",
+      "outil": "verifier_stock",
+      "arguments": {
+        "produit_id": "P05",
+        "quantite": 2
+      },
+      "resultat": {
+        "produit_id": "P05",
+        "nom": "Robe en wax",
+        "prix_xof": 22000,
+        "quantite_demandee": 2,
+        "stock_disponible": 5,
+        "disponible": true
+      },
+      "duree_ms": 0,
+      "n": 1
+    },
+    {
+      "type": "outil",
+      "agent": "vendeuse",
+      "outil": "verifier_stock",
+      "arguments": {
+        "produit_id": "P06"
+      },
+      "resultat": {
+        "produit_id": "P06",
+        "nom": "Beurre de karité 500 g",
+        "prix_xof": 3500,
+        "quantite_demandee": 1,
+        "stock_disponible": 40,
+        "disponible": true
+      },
+      "duree_ms": 0,
+      "n": 2
+    },
+    {
+      "type": "outil",
+      "agent": "vendeuse",
+      "outil": "frais_livraison",
+      "arguments": {
+        "zone": "Calavi",
+        "articles": [
+          {
+            "produit_id": "P05",
+            "quantite": 2
+          },
+          {
+            "produit_id": "P06",
+            "quantite": 1
+          }
+        ]
+      },
+      "resultat": {
+        "zone": "Calavi",
+        "frais_livraison_xof": 2000,
+        "delai": "24 à 48 h",
+        "lignes": [
+          {
+            "produit_id": "P05",
+            "nom": "Robe en wax",
+            "quantite": 2,
+            "prix_unitaire_xof": 22000,
+            "montant_xof": 44000
+          },
+          {
+            "produit_id": "P06",
+            "nom": "Beurre de karité 500 g",
+            "quantite": 1,
+            "prix_unitaire_xof": 3500,
+            "montant_xof": 3500
+          }
+        ],
+        "sous_total_articles_xof": 47500,
+        "total_xof": 49500
+      },
+      "duree_ms": 1,
+      "n": 3
+    },
+    {
+      "type": "evaluation",
+      "agent": "règles",
+      "verdict": "❌ règles",
+      "detail": "Chiffres qui ne viennent d'aucun outil : [350.0, 495.0, 49500220.0]. Appelle l'outil qui les donne, ou retire-les. | Le client a dit « oui » au récapitulatif à 46000 FCFA : il confirme exactement ces articles. N'ajoute pas l'alternative (sauf demande explicite) et ne retire rien : refais le calcul avec les seuls articles de la note interne (total 46000 FCFA).",
+      "n": 4
+    },
+    {
+      "type": "outil",
+      "agent": "vendeuse",
+      "outil": "frais_livraison",
+      "arguments": {
+        "zone": "Calavi",
+        "articles": [
+          {
+            "produit_id": "P05",
+            "quantite": 2
+          }
+        ]
+      },
+      "resultat": {
+        "zone": "Calavi",
+        "frais_livraison_xof": 2000,
+        "delai": "24 à 48 h",
+        "lignes": [
+          {
+            "produit_id": "P05",
+            "nom": "Robe en wax",
+            "quantite": 2,
+            "prix_unitaire_xof": 22000,
+            "montant_xof": 44000
+          }
+        ],
+        "sous_total_articles_xof": 44000,
+        "total_xof": 46000
+      },
+      "duree_ms": 1,
+      "n": 5
+    },
+    {
+      "type": "outil",
+      "agent": "vendeuse",
+      "outil": "creer_commande",
+      "arguments": {
+        "client_nom": "Afi",
+        "zone": "Calavi",
+        "articles": [
+          {
+            "produit_id": "P05",
+            "quantite": 2
+          }
+        ],
+        "confirmation_client": true
+      },
+      "resultat": {
+        "commande_id": "2",
+        "statut": "validee",
+        "zone": "Calavi",
+        "lignes": [
+          {
+            "produit_id": "P05",
+            "nom": "Robe en wax",
+            "quantite": 2,
+            "prix_unitaire_xof": 22000,
+            "montant_xof": 44000
+          }
+        ],
+        "sous_total_articles_xof": 44000,
+        "frais_livraison_xof": 2000,
+        "total_xof": 46000,
+        "motif": null,
+        "message": "Commande VALIDÉE par Afi."
+      },
+      "duree_ms": 12919,
+      "n": 6
+    },
+    {
+      "type": "evaluation",
+      "agent": "règles",
+      "verdict": "✅ règles OK",
+      "detail": "",
+      "n": 7
+    },
+    {
+      "type": "evaluation",
+      "agent": "juge",
+      "verdict": "⚖️ ok (note 4/5)",
+      "detail": "La commande validée est correctement récapitulée avec des chiffres conformes aux outils, mais la réponse précédente (refus injustifié) aurait pu déstabiliser le client ; heureusement la reprise est propre et chaleureuse.",
+      "n": 8
+    },
+    {
+      "type": "reponse_finale",
+      "detail": "256 caractères",
+      "n": 9
+    }
+  ]
+}

@@ -1,0 +1,118 @@
+{
+  "question": "oui je confirme",
+  "reponse": "Merci pour votre confirmation ! Voici le récapitulatif :\n\n• *2 Robes en wax* à 22 000 FCFA chacune\n• *1 Paire de sandales en cuir* à 9 000 FCFA\n• *Frais de livraison* à Calavi : 2 000 FCFA\n• *Total : 55 000 FCFA*\nDélai de livraison : 24 à 48 h.\n\nQuel est votre nom pour l'enregistrement de la commande ?",
+  "resume": {
+    "duree_s": 6.94,
+    "nb_etapes": 6,
+    "appels_llm": 3,
+    "outils": [
+      "verifier_stock",
+      "verifier_stock",
+      "frais_livraison"
+    ],
+    "tokens_entree": 5168,
+    "tokens_sortie": 325
+  },
+  "etapes": [
+    {
+      "type": "outil",
+      "agent": "vendeuse",
+      "outil": "verifier_stock",
+      "arguments": {
+        "produit_id": "P05",
+        "quantite": 2
+      },
+      "resultat": {
+        "produit_id": "P05",
+        "nom": "Robe en wax",
+        "prix_xof": 22000,
+        "quantite_demandee": 2,
+        "stock_disponible": 5,
+        "disponible": true
+      },
+      "duree_ms": 1,
+      "n": 1
+    },
+    {
+      "type": "outil",
+      "agent": "vendeuse",
+      "outil": "verifier_stock",
+      "arguments": {
+        "produit_id": "P04",
+        "quantite": 1
+      },
+      "resultat": {
+        "produit_id": "P04",
+        "nom": "Sandales en cuir",
+        "prix_xof": 9000,
+        "quantite_demandee": 1,
+        "stock_disponible": 8,
+        "disponible": true
+      },
+      "duree_ms": 0,
+      "n": 2
+    },
+    {
+      "type": "outil",
+      "agent": "vendeuse",
+      "outil": "frais_livraison",
+      "arguments": {
+        "zone": "Calavi",
+        "articles": [
+          {
+            "produit_id": "P05",
+            "quantite": 2
+          },
+          {
+            "produit_id": "P04",
+            "quantite": 1
+          }
+        ]
+      },
+      "resultat": {
+        "zone": "Calavi",
+        "frais_livraison_xof": 2000,
+        "delai": "24 à 48 h",
+        "lignes": [
+          {
+            "produit_id": "P05",
+            "nom": "Robe en wax",
+            "quantite": 2,
+            "prix_unitaire_xof": 22000,
+            "montant_xof": 44000
+          },
+          {
+            "produit_id": "P04",
+            "nom": "Sandales en cuir",
+            "quantite": 1,
+            "prix_unitaire_xof": 9000,
+            "montant_xof": 9000
+          }
+        ],
+        "sous_total_articles_xof": 53000,
+        "total_xof": 55000
+      },
+      "duree_ms": 0,
+      "n": 3
+    },
+    {
+      "type": "evaluation",
+      "agent": "règles",
+      "verdict": "✅ règles OK",
+      "detail": "",
+      "n": 4
+    },
+    {
+      "type": "evaluation",
+      "agent": "juge",
+      "verdict": "⚖️ ok (note 5/5)",
+      "detail": "Tous les montants correspondent exactement aux données outils (44 000 + 9 000 + 2 000 = 55 000 FCFA), l'alternative rupture a été proposée et acceptée, la réponse est sous 80 mots et l'étape suivante (nom pour la commande) est bien demandée.",
+      "n": 5
+    },
+    {
+      "type": "reponse_finale",
+      "detail": "303 caractères",
+      "n": 6
+    }
+  ]
+}

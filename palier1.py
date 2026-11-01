@@ -2,7 +2,7 @@
 
 Usage :
     python palier1.py              # conversation libre
-    python palier1.py --demo       # scénario de démo (≥ 2 outils enchaînés)
+    python palier1.py --demo       # les 3 tests imposés du palier 1
     python palier1.py --check      # vérifie la clé RodiumAI et le tool calling
 """
 from __future__ import annotations
@@ -17,9 +17,11 @@ from boutique.llm import LLMError, RodiumClient
 from boutique.store import JsonFileStore
 from boutique.tools import SCHEMAS, Toolbox
 
+# Les 3 tests imposés du palier 1 (sujet)
 DEMO = [
-    "Bonsoir ! Je suis à Montréal. Vous avez du wax Vlisco bleu ? J'en voudrais 2 pièces "
-    "livrées chez ma sœur à Abomey-Calavi. Ça fait combien en tout, et en dollars canadiens ?",
+    "Vous avez des pagnes ? Combien ça fait en euros pour ma sœur à Paris ?",
+    "Livrez-moi à Lomé.",
+    "C'est combien le sac en raphia ?",
 ]
 
 
@@ -33,7 +35,7 @@ async def verifier_connexion() -> None:
     s = Settings.from_env()
     llm = RodiumClient(s.api_key, s.base_url, s.model)
     print(f"Modèle : {s.model}  ·  URL : {s.base_url}")
-    rep = await llm.chat([{"role": "user", "content": "Cherche un sac en pagne dans le catalogue."}],
+    rep = await llm.chat([{"role": "user", "content": "Vous avez un sac en raphia ?"}],
                          tools=SCHEMAS)
     appels = rep.message.get("tool_calls") or []
     if appels:
@@ -65,9 +67,9 @@ async def main() -> None:
         agent = construire_agent()
         historique: list[dict] = []
         if a.demo:
-            for q in DEMO:
-                print(f"👤 Client : {q}")
-                await tour(agent, historique, q)
+            for i, q in enumerate(DEMO, 1):  # chaque test est une conversation indépendante
+                print(f"\n{'═' * 70}\nTEST {i}/3 · 👤 Client : {q}")
+                await tour(agent, [], q)
             return
         print("Boutique Pagnes de Dantokpa — tape 'quit' pour sortir.\n")
         while True:

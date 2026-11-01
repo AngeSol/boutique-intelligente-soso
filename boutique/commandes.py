@@ -1,7 +1,7 @@
 """Cycle de vie d'une commande et validation par la gérante (palier 2-3).
 
-  en_attente_validation_gerante ──OK gérante──▶ validee  (le stock baisse ici)
-                                └─NON gérante─▶ refusee
+  en_attente_validation_gerante ──OUI d'Afi──▶ validee  (le stock baisse ici)
+                                └─NON d'Afi─▶ refusee
                                 └─stock épuisé entre-temps─▶ refusee (motif stock)
 
 C'est du code, pas du LLM : aucun client ne peut valider une commande
@@ -67,20 +67,18 @@ async def commandes_en_attente(store) -> list[dict]:
 
 # ------------------------------------------------------------------ messages
 def recap_gerante(c: dict) -> str:
-    lignes = "\n".join(f"• {l['quantite']} × {l['nom']} = {fcfa(l['montant_xof'])}" for l in c["lignes"])
-    return (f"🧾 *Nouvelle commande {c['id']}*\n"
-            f"Client : {c['client']['nom']} ({c['client']['telephone']})\n"
-            f"{lignes}\n"
-            f"🚚 {c['zone']} : {fcfa(c['frais_livraison_xof'])}\n"
-            f"*Total : {fcfa(c['total_xof'])}*\n\n"
-            f"Répondez *OK {c['id']}* pour valider ou *NON {c['id']} motif* pour refuser.")
+    """Format du sujet : « Commande #12 : 2 robes en wax, Calavi, 46 000 FCFA. Répondez OUI 12 ou NON 12 »."""
+    articles = ", ".join(f"{l['quantite']} × {l['nom']}" for l in c["lignes"])
+    return (f"🧾 *Commande #{c['id']}* : {articles}, {c['zone']}, *{fcfa(c['total_xof'])}*.\n"
+            f"Client : {c['client']['nom']} ({c['client'].get('telephone') or 'numéro inconnu'})\n"
+            f"Répondez *OUI {c['id']}* ou *NON {c['id']}* (suivi d'un motif si vous voulez).")
 
 
 def message_client_decision(c: dict) -> str:
     if c["statut"] == VALIDEE:
-        return (f"✅ Bonne nouvelle ! Votre commande *{c['id']}* est validée par la boutique.\n"
+        return (f"✅ Bonne nouvelle ! Votre commande *#{c['id']}* est validée par la boutique.\n"
                 f"Total : *{fcfa(c['total_xof'])}* · Livraison {c['zone']} ({c['delai']}).\n"
                 f"Merci pour votre confiance 🙏")
-    return (f"😔 Désolée, votre commande *{c['id']}* n'a pas pu être validée"
+    return (f"😔 Désolée, votre commande *#{c['id']}* n'a pas pu être validée par la boutique"
             f" ({c.get('motif', 'motif non précisé')}).\n"
             f"Voulez-vous que je vous propose une autre option ?")

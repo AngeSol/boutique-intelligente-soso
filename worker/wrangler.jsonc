@@ -15,7 +15,7 @@
   "vars": {
     "RODIUM_BASE_URL": "https://api.rodiumai.io/v1",
     "LLM_MODEL": "openai/gpt-4o-mini",
-    "MAX_STEPS": "6",
+    "MAX_STEPS": "8",
     "JUGE_ACTIF": "0",
     "GREEN_API_URL": "https://7107.api.greenapi.com",
     "GREEN_ID_INSTANCE": "710722787497"

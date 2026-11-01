@@ -1,16 +1,13 @@
 {
   "devise": "XOF",
-  "supplement_par_article_au_dela_de": 5,
-  "supplement_par_article": 300,
+  "delai": "24 à 48 h",
   "zones": {
-    "retrait boutique dantokpa": {"frais": 0, "delai": "immédiat, aux heures d'ouverture"},
-    "cotonou": {"frais": 1000, "delai": "24 h"},
-    "abomey-calavi": {"frais": 1500, "delai": "24 h"},
-    "porto-novo": {"frais": 2500, "delai": "24 à 48 h"},
-    "ouidah": {"frais": 3000, "delai": "48 h"},
-    "bohicon": {"frais": 4000, "delai": "48 h"},
-    "parakou": {"frais": 6000, "delai": "2 à 3 jours"},
-    "lomé": {"frais": 7000, "delai": "2 à 3 jours"},
-    "lagos": {"frais": 9000, "delai": "3 à 5 jours"}
-  }
+    "Cotonou": 1000,
+    "Akpakpa": 1000,
+    "Fidjrossè": 1500,
+    "Calavi": 2000,
+    "Porto-Novo": 3000,
+    "Ouidah": 3500
+  },
+  "alias": {"abomey-calavi": "Calavi", "fidjrosse": "Fidjrossè", "porto novo": "Porto-Novo"}
 }

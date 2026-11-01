@@ -1,0 +1,217 @@
+{
+  "question": "Je m'appelle Afi. Je veux 2 robes en wax et 1 sac en raphia, livrés à Calavi.",
+  "reponse": "*Voici votre récapitulatif :*\n\n• 2 x Robe en wax : 44 000 FCFA  \n• 1 x Sac en raphia : 7 500 FCFA  \n• Frais de livraison à Calavi : 2 000 FCFA  \n• **Total : 53 500 FCFA**  \n\nLe sac en raphia est en rupture, mais je peux vous proposer des sandales en cuir à 9 000 FCFA. \n\nJe valide ?",
+  "resume": {
+    "duree_s": 16.76,
+    "nb_etapes": 11,
+    "appels_llm": 8,
+    "outils": [
+      "chercher_produits",
+      "chercher_produits",
+      "verifier_stock",
+      "frais_livraison",
+      "frais_livraison",
+      "chercher_produits"
+    ],
+    "tokens_entree": 15916,
+    "tokens_sortie": 620
+  },
+  "etapes": [
+    {
+      "type": "outil",
+      "agent": "vendeuse",
+      "outil": "chercher_produits",
+      "arguments": {
+        "requete": "robe en wax"
+      },
+      "resultat": {
+        "resultats": [
+          {
+            "id": "P05",
+            "nom": "Robe en wax",
+            "prix_xof": 22000,
+            "en_stock": true
+          }
+        ]
+      },
+      "duree_ms": 0,
+      "n": 1
+    },
+    {
+      "type": "outil",
+      "agent": "vendeuse",
+      "outil": "chercher_produits",
+      "arguments": {
+        "requete": "sac en raphia"
+      },
+      "resultat": {
+        "resultats": [
+          {
+            "id": "P03",
+            "nom": "Sac en raphia",
+            "prix_xof": 7500,
+            "en_stock": false,
+            "rupture": true,
+            "alternatives": [
+              {
+                "id": "P04",
+                "nom": "Sandales en cuir",
+                "prix_xof": 9000,
+                "stock_disponible": 8
+              }
+            ]
+          }
+        ]
+      },
+      "duree_ms": 0,
+      "n": 2
+    },
+    {
+      "type": "outil",
+      "agent": "vendeuse",
+      "outil": "verifier_stock",
+      "arguments": {
+        "produit_id": "P05",
+        "quantite": 2
+      },
+      "resultat": {
+        "produit_id": "P05",
+        "nom": "Robe en wax",
+        "prix_xof": 22000,
+        "quantite_demandee": 2,
+        "stock_disponible": 5,
+        "disponible": true
+      },
+      "duree_ms": 0,
+      "n": 3
+    },
+    {
+      "type": "outil",
+      "agent": "vendeuse",
+      "outil": "frais_livraison",
+      "arguments": {
+        "zone": "Calavi",
+        "articles": [
+          {
+            "produit_id": "P05",
+            "quantite": 2
+          }
+        ]
+      },
+      "resultat": {
+        "zone": "Calavi",
+        "frais_livraison_xof": 2000,
+        "delai": "24 à 48 h",
+        "lignes": [
+          {
+            "produit_id": "P05",
+            "nom": "Robe en wax",
+            "quantite": 2,
+            "prix_unitaire_xof": 22000,
+            "montant_xof": 44000
+          }
+        ],
+        "sous_total_articles_xof": 44000,
+        "total_xof": 46000
+      },
+      "duree_ms": 1,
+      "n": 4
+    },
+    {
+      "type": "evaluation",
+      "agent": "règles",
+      "verdict": "❌ règles",
+      "detail": "Donne aussi le prix de Sac en raphia (7500 FCFA), puis signale la rupture et propose l'alternative.",
+      "n": 5
+    },
+    {
+      "type": "outil",
+      "agent": "vendeuse",
+      "outil": "frais_livraison",
+      "arguments": {
+        "zone": "Calavi",
+        "articles": [
+          {
+            "produit_id": "P05",
+            "quantite": 2
+          },
+          {
+            "produit_id": "P03",
+            "quantite": 1
+          }
+        ]
+      },
+      "resultat": {
+        "zone": "Calavi",
+        "frais_livraison_xof": 2000,
+        "delai": "24 à 48 h",
+        "lignes": [
+          {
+            "produit_id": "P05",
+            "nom": "Robe en wax",
+            "quantite": 2,
+            "prix_unitaire_xof": 22000,
+            "montant_xof": 44000
+          },
+          {
+            "produit_id": "P03",
+            "nom": "Sac en raphia",
+            "quantite": 1,
+            "prix_unitaire_xof": 7500,
+            "montant_xof": 7500
+          }
+        ],
+        "sous_total_articles_xof": 51500,
+        "total_xof": 53500
+      },
+      "duree_ms": 1,
+      "n": 6
+    },
+    {
+      "type": "outil",
+      "agent": "vendeuse",
+      "outil": "chercher_produits",
+      "arguments": {
+        "requete": "sandales en cuir"
+      },
+      "resultat": {
+        "resultats": [
+          {
+            "id": "P04",
+            "nom": "Sandales en cuir",
+            "prix_xof": 9000,
+            "en_stock": true
+          }
+        ]
+      },
+      "duree_ms": 1,
+      "n": 7
+    },
+    {
+      "type": "evaluation",
+      "agent": "règles",
+      "verdict": "✅ règles OK",
+      "detail": "",
+      "n": 8
+    },
+    {
+      "type": "evaluation",
+      "agent": "juge",
+      "verdict": "⚖️ pas encore (note 2/5)",
+      "detail": "Le récapitulatif inclut le sac en raphia en rupture dans le total (53 500 FCFA) alors qu'il ne peut pas être commandé ; il faut d'abord signaler la rupture, proposer l'alternative, puis recalculer le total sans le sac (46 000 FCFA) ou avec les sandales si le client accepte.",
+      "n": 9
+    },
+    {
+      "type": "evaluation",
+      "agent": "règles",
+      "verdict": "❌ règles",
+      "detail": "Chiffres qui ne viennent d'aucun outil : [55000.0]. Appelle l'outil qui les donne, ou retire-les. | Le total annoncé doit être exactement 53500 FCFA (51500 articles + 2000 livraison). | Donne aussi le prix de Sac en raphia (7500 FCFA), puis signale la rupture et propose l'alternative.",
+      "n": 10
+    },
+    {
+      "type": "reponse_finale",
+      "detail": "message de vérification (échec après correction)",
+      "n": 11
+    }
+  ]
+}

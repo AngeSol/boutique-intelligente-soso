@@ -28,13 +28,14 @@ TTL_DOUBLON = 2 * 24 * 3600
 TTL_HISTORIQUE = 7 * 24 * 3600
 MAX_CARACTERES = 1000
 
-AIDE_GERANTE = ("👩🏾‍💼 Commandes gérante :\n"
-                "• *OK CMD-...* pour valider\n"
-                "• *NON CMD-... motif* pour refuser\n"
+AIDE_GERANTE = ("👩🏾‍💼 Commandes d'Afi :\n"
+                "• *OUI 12* pour valider la commande n°12\n"
+                "• *NON 12 motif* pour la refuser\n"
                 "• *COMMANDES* pour voir celles en attente")
 
-_RE_OK = re.compile(r"^\s*(?:ok|oui|valider?|valide)\s+(cmd-[\w-]+)\s*$", re.IGNORECASE)
-_RE_NON = re.compile(r"^\s*(?:non|refuser?|refuse)\s+(cmd-[\w-]+)\s*(.*)$", re.IGNORECASE | re.DOTALL)
+# « OUI 12 », « oui #12 », « OK 12 » (et l'ancien format « OK CMD-… ») ; « NON 12 motif »
+_RE_OK = re.compile(r"^\s*(?:oui|ok|valider?|valide)\s*#?\s*((?:cmd-)?[\w-]+)\s*$", re.IGNORECASE)
+_RE_NON = re.compile(r"^\s*(?:non|refuser?|refuse)\s*#?\s*((?:cmd-)?[\w-]+)\s*(.*)$", re.IGNORECASE | re.DOTALL)
 
 
 def extraire_texte(body: dict) -> str | None:
@@ -147,7 +148,7 @@ class ServiceWhatsApp:
             if not attente:
                 await self.green.envoyer(self.s.gerante_chat_id, "✅ Aucune commande en attente.")
             else:
-                lignes = [f"• *{c['id']}* · {c['client']['nom']} · {fcfa(c['total_xof'])}" for c in attente]
+                lignes = [f"• *#{c['id']}* · {c['client']['nom']} · {fcfa(c['total_xof'])}" for c in attente]
                 await self.green.envoyer(self.s.gerante_chat_id,
                                          "🧾 En attente :\n" + "\n".join(lignes) + "\n\n" + AIDE_GERANTE)
             return "gerante:liste"
@@ -171,8 +172,8 @@ class ServiceWhatsApp:
                                     json.dumps(historique[-self.max_historique:], ensure_ascii=False),
                                     ttl=TTL_HISTORIQUE)
         if commande["statut"] == VALIDEE:
-            info = f"✅ {commande['id']} validée. Stock mis à jour, client prévenu."
+            info = f"✅ Commande #{commande['id']} validée. Stock mis à jour, client prévenu."
         else:
-            info = f"❌ {commande['id']} refusée ({commande.get('motif')}). Client prévenu."
+            info = f"❌ Commande #{commande['id']} refusée ({commande.get('motif')}). Client prévenu, rien n'est enregistré."
         await self.green.envoyer(self.s.gerante_chat_id, info)
         return f"gerante:{commande['statut']}"

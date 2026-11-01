@@ -1,15 +1,11 @@
 {
   "devise": "XOF",
   "produits": [
-    {"id": "P001", "nom": "Pagne wax Vlisco « Œil de mon rival »", "categorie": "pagne", "prix": 25000, "unite": "pièce de 6 yards", "couleurs": ["bleu", "orange"], "stock": 8},
-    {"id": "P002", "nom": "Pagne wax Vlisco « Alphabet »", "categorie": "pagne", "prix": 27000, "unite": "pièce de 6 yards", "couleurs": ["jaune", "noir"], "stock": 0},
-    {"id": "P003", "nom": "Pagne wax Hitarget motif fleurs", "categorie": "pagne", "prix": 9000, "unite": "pièce de 6 yards", "couleurs": ["rouge", "vert"], "stock": 25},
-    {"id": "P004", "nom": "Pagne Woodin « Soleil »", "categorie": "pagne", "prix": 15000, "unite": "pièce de 6 yards", "couleurs": ["jaune", "bleu"], "stock": 12},
-    {"id": "P005", "nom": "Pagne tissé Kanvo (Abomey)", "categorie": "pagne", "prix": 35000, "unite": "ensemble 3 pièces", "couleurs": ["or", "vert", "rouge"], "stock": 3},
-    {"id": "P006", "nom": "Bazin riche brodé", "categorie": "pagne", "prix": 18000, "unite": "pièce de 5 mètres", "couleurs": ["blanc", "bleu ciel"], "stock": 6},
-    {"id": "A001", "nom": "Foulard de tête assorti en wax", "categorie": "accessoire", "prix": 3500, "unite": "pièce", "couleurs": ["multicolore"], "stock": 30},
-    {"id": "A002", "nom": "Sac à main en pagne", "categorie": "accessoire", "prix": 12000, "unite": "pièce", "couleurs": ["bleu", "orange", "rouge"], "stock": 5},
-    {"id": "A003", "nom": "Sandales cuir et wax", "categorie": "accessoire", "prix": 8500, "unite": "paire", "couleurs": ["marron", "noir"], "stock": 0},
-    {"id": "A004", "nom": "Collier de perles du Bénin", "categorie": "accessoire", "prix": 6000, "unite": "pièce", "couleurs": ["multicolore"], "stock": 15}
+    {"id": "P01", "nom": "Pagne wax 6 yards", "categorie": "textile", "prix": 12000, "stock": 14, "mots_cles": ["pagne", "wax", "tissu"]},
+    {"id": "P02", "nom": "Chemise bazin homme", "categorie": "vetement", "prix": 18500, "stock": 3, "mots_cles": ["chemise", "bazin", "homme"]},
+    {"id": "P03", "nom": "Sac en raphia", "categorie": "accessoire", "prix": 7500, "stock": 0, "mots_cles": ["sac", "raphia"]},
+    {"id": "P04", "nom": "Sandales en cuir", "categorie": "accessoire", "prix": 9000, "stock": 8, "mots_cles": ["sandale", "cuir", "chaussure"]},
+    {"id": "P05", "nom": "Robe en wax", "categorie": "vetement", "prix": 22000, "stock": 5, "mots_cles": ["robe", "wax"]},
+    {"id": "P06", "nom": "Beurre de karité 500 g", "categorie": "beaute", "prix": 3500, "stock": 40, "mots_cles": ["beurre", "karite", "pot"]}
   ]
 }

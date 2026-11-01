@@ -1,0 +1,106 @@
+{
+  "question": "Vous avez des pagnes ? Combien ça fait en euros pour ma sœur à Paris ?",
+  "reponse": "Bonjour ! Nous avons un *pagne wax de 6 yards* disponible au prix de *12 000 FCFA*, soit environ *18,29 €*. Souhaitez-vous passer commande ? Je vous attends !",
+  "resume": {
+    "duree_s": 15.28,
+    "nb_etapes": 9,
+    "appels_llm": 9,
+    "outils": [
+      "chercher_produits",
+      "convertir_devise"
+    ],
+    "tokens_entree": 6323,
+    "tokens_sortie": 377
+  },
+  "etapes": [
+    {
+      "type": "outil",
+      "agent": "vendeur",
+      "outil": "chercher_produits",
+      "arguments": {
+        "requete": "pagne"
+      },
+      "resultat": {
+        "resultats": [
+          {
+            "id": "P01",
+            "nom": "Pagne wax 6 yards",
+            "prix_xof": 12000,
+            "en_stock": true
+          }
+        ]
+      },
+      "duree_ms": 3,
+      "n": 1
+    },
+    {
+      "type": "delegation",
+      "agent": "gérant",
+      "vers": "vendeur",
+      "consigne": "Demander le catalogue des pagnes disponibles, leurs prix en FCFA et les quantités en stock.",
+      "compte_rendu": "Voici le catalogue des pagnes disponibles :\n\n- **Référence** : P01\n  - **Nom** : Pagne wax 6 yards\n  - **Prix** : 12 000 FCFA\n  - **En stock** : Oui",
+      "n": 2
+    },
+    {
+      "type": "outil",
+      "agent": "logisticien",
+      "outil": "convertir_devise",
+      "arguments": {
+        "montant": 12000,
+        "devise_cible": "EUR"
+      },
+      "resultat": {
+        "montant_source": 12000,
+        "devise_source": "XOF",
+        "montant_converti": 18.29,
+        "devise_cible": "EUR",
+        "taux": 0.001524,
+        "date_taux": "Sun, 01 Nov 2026 00:02:31 +0000",
+        "source_taux": "open.er-api.com"
+      },
+      "duree_ms": 134,
+      "n": 3
+    },
+    {
+      "type": "delegation",
+      "agent": "gérant",
+      "vers": "logisticien",
+      "consigne": "Convertir 12000 FCFA en euros pour le pagne wax 6 yards (référence P01).",
+      "compte_rendu": "- Sous-total : 12 000 FCFA\n- Montant converti : 18,29 EUR\n- Taux : 0,001524",
+      "n": 4
+    },
+    {
+      "type": "redaction",
+      "agent": "rédacteur",
+      "detail": "158 caractères",
+      "n": 5
+    },
+    {
+      "type": "delegation",
+      "agent": "gérant",
+      "vers": "redacteur",
+      "consigne": "Bonjour ! Nous avons un pagne wax de 6 yards disponible au prix de 12 000 FCFA, ce qui équivaut à environ 18,29 EUR. Souhaitez-vous passer commande ?",
+      "compte_rendu": "Message rédigé et envoyé au client.",
+      "n": 6
+    },
+    {
+      "type": "evaluation",
+      "agent": "règles",
+      "verdict": "✅ règles OK",
+      "detail": "",
+      "n": 7
+    },
+    {
+      "type": "evaluation",
+      "agent": "juge",
+      "verdict": "⚖️ ok (note 5/5)",
+      "detail": "Prix exact issu des outils, conversion correcte, réponse concise et chaleureuse avec une invitation claire à passer commande.",
+      "n": 8
+    },
+    {
+      "type": "reponse_finale",
+      "detail": "158 caractères",
+      "n": 9
+    }
+  ]
+}

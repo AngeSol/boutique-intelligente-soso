@@ -1,0 +1,231 @@
+{
+  "question": "Je m'appelle Afi. Je veux 2 robes en wax et 1 sac en raphia, livrés à Calavi.",
+  "reponse": "Je préfère vérifier ces informations avec la gérante avant de vous répondre, pour ne pas vous donner de mauvais chiffres. Je reviens vers vous très vite 🙏",
+  "resume": {
+    "duree_s": 24.01,
+    "nb_etapes": 17,
+    "appels_llm": 13,
+    "outils": [
+      "chercher_produits",
+      "chercher_produits",
+      "verifier_stock",
+      "frais_livraison",
+      "frais_livraison"
+    ],
+    "tokens_entree": 10978,
+    "tokens_sortie": 1099
+  },
+  "etapes": [
+    {
+      "type": "outil",
+      "agent": "vendeur",
+      "outil": "chercher_produits",
+      "arguments": {
+        "requete": "robe en wax"
+      },
+      "resultat": {
+        "resultats": [
+          {
+            "id": "P05",
+            "nom": "Robe en wax",
+            "prix_xof": 22000,
+            "en_stock": true
+          }
+        ]
+      },
+      "duree_ms": 3,
+      "n": 1
+    },
+    {
+      "type": "outil",
+      "agent": "vendeur",
+      "outil": "chercher_produits",
+      "arguments": {
+        "requete": "sac en raphia"
+      },
+      "resultat": {
+        "resultats": [
+          {
+            "id": "P03",
+            "nom": "Sac en raphia",
+            "prix_xof": 7500,
+            "en_stock": false,
+            "rupture": true,
+            "alternatives": [
+              {
+                "id": "P04",
+                "nom": "Sandales en cuir",
+                "prix_xof": 9000,
+                "stock_disponible": 8
+              }
+            ]
+          }
+        ]
+      },
+      "duree_ms": 1,
+      "n": 2
+    },
+    {
+      "type": "outil",
+      "agent": "vendeur",
+      "outil": "verifier_stock",
+      "arguments": {
+        "produit_id": "P05",
+        "quantite": 2
+      },
+      "resultat": {
+        "produit_id": "P05",
+        "nom": "Robe en wax",
+        "prix_xof": 22000,
+        "quantite_demandee": 2,
+        "stock_disponible": 5,
+        "disponible": true
+      },
+      "duree_ms": 1,
+      "n": 3
+    },
+    {
+      "type": "delegation",
+      "agent": "gérant",
+      "vers": "vendeur",
+      "consigne": "Vérifier la disponibilité de 2 robes en wax et 1 sac en raphia.",
+      "compte_rendu": "Voici le récapitulatif de la disponibilité des produits demandés :\n\n1. **Robe en wax**\n   - Référence : P05\n   - Prix : 22 000 FCFA\n   - Stock disponible : 5 (2 demandées, donc disponibles)\n\n2. **Sac en raphia**\n   - Référence : P03\n   - Prix : 7 500 FCFA\n   - Statut : Rupture de stock\n   - Alternatives : \n     - **Sandales en cuir**\n       - Référence : P04\n       - Prix : 9 000 FCFA\n       - Stock disponible : 8\n\nSi vous souhaitez procéder avec la commande des robes ou explorer d'autres options, faites-le moi savoir.",
+      "n": 4
+    },
+    {
+      "type": "outil",
+      "agent": "logisticien",
+      "outil": "frais_livraison",
+      "arguments": {
+        "zone": "Calavi",
+        "articles": [
+          {
+            "produit_id": "P01",
+            "quantite": 2
+          },
+          {
+            "produit_id": "P02",
+            "quantite": 1
+          }
+        ]
+      },
+      "resultat": {
+        "erreur": "référence(s) ['P01', 'P02'] jamais renvoyée(s) par le vendeur pendant cet échange : ne devine pas ; demande au Gérant les références exactes (ex. P05)",
+        "references_connues": [
+          "P03",
+          "P04",
+          "P05"
+        ]
+      },
+      "duree_ms": 3,
+      "n": 5
+    },
+    {
+      "type": "delegation",
+      "agent": "gérant",
+      "vers": "logisticien",
+      "consigne": "Calculer les frais de livraison pour une commande de 2 robes en wax et 1 sac en raphia à Calavi.",
+      "compte_rendu": "Les références des articles ne sont pas complètes. Les références connues sont : P03, P04, P05. Veuillez fournir les références exactes pour les robes en wax et le sac en raphia.",
+      "n": 6
+    },
+    {
+      "type": "outil",
+      "agent": "logisticien",
+      "outil": "frais_livraison",
+      "arguments": {
+        "zone": "Calavi",
+        "articles": [
+          {
+            "produit_id": "P05",
+            "quantite": 2
+          }
+        ]
+      },
+      "resultat": {
+        "zone": "Calavi",
+        "frais_livraison_xof": 2000,
+        "delai": "24 à 48 h",
+        "lignes": [
+          {
+            "produit_id": "P05",
+            "nom": "Robe en wax",
+            "quantite": 2,
+            "prix_unitaire_xof": 22000,
+            "montant_xof": 44000
+          }
+        ],
+        "sous_total_articles_xof": 44000,
+        "total_xof": 46000
+      },
+      "duree_ms": 1,
+      "n": 7
+    },
+    {
+      "type": "delegation",
+      "agent": "gérant",
+      "vers": "logisticien",
+      "consigne": "Calculer les frais de livraison pour 2 robes en wax (référence P05) à Calavi.",
+      "compte_rendu": "- **Zone** : Calavi\n- **Délai** : 24 à 48 h\n- **Sous-total** : 44 000 FCFA\n- **Frais de livraison** : 2 000 FCFA\n- **TOTAL** : 46 000 FCFA",
+      "n": 8
+    },
+    {
+      "type": "redaction",
+      "agent": "rédacteur",
+      "detail": "387 caractères",
+      "n": 9
+    },
+    {
+      "type": "delegation",
+      "agent": "gérant",
+      "vers": "redacteur",
+      "consigne": "Informer le client que les 2 robes en wax sont disponibles, mais que le sac en raphia est en rupture de stock. Proposer l'alternative de sandales en cuir (référence P04) à 9 000 FCFA. Demander au client s'il souhaite procéder avec la commande des robes et éventuellement des sandales.",
+      "compte_rendu": "Message rédigé et envoyé au client.",
+      "n": 10
+    },
+    {
+      "type": "evaluation",
+      "agent": "règles",
+      "verdict": "❌ règles",
+      "detail": "Donne aussi le prix de Sac en raphia (7500 FCFA), puis signale la rupture et propose l'alternative.",
+      "n": 11
+    },
+    {
+      "type": "redaction",
+      "agent": "rédacteur",
+      "detail": "339 caractères (correction)",
+      "n": 12
+    },
+    {
+      "type": "evaluation",
+      "agent": "règles",
+      "verdict": "✅ règles OK",
+      "detail": "",
+      "n": 13
+    },
+    {
+      "type": "evaluation",
+      "agent": "juge",
+      "verdict": "⚖️ pas encore (note 2/5)",
+      "detail": "Le total de 46 000 FCFA est correct (2 robes + livraison), mais la réponse dépasse 80 mots, ce qui enfreint le critère obligatoire de longueur.",
+      "n": 14
+    },
+    {
+      "type": "redaction",
+      "agent": "rédacteur",
+      "detail": "391 caractères (correction)",
+      "n": 15
+    },
+    {
+      "type": "evaluation",
+      "agent": "règles",
+      "verdict": "❌ règles",
+      "detail": "Donne aussi le prix de Sac en raphia (7500 FCFA), puis signale la rupture et propose l'alternative.",
+      "n": 16
+    },
+    {
+      "type": "reponse_finale",
+      "detail": "message de vérification (rejet du juge non corrigé)",
+      "n": 17
+    }
+  ]
+}
