@@ -1,0 +1,5 @@
+# Secrets pour `uv run pywrangler dev` en local : copie en .dev.vars (jamais commité)
+RODIUM_API_KEY=rd_sk_ta_cle_ici
+GREEN_API_TOKEN=ton_api_token_instance
+WEBHOOK_TOKEN=un_long_secret_aleatoire
+GERANTE_CHAT_ID=22997000000@c.us

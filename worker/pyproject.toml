@@ -1,0 +1,14 @@
+[project]
+name = "boutique-intelligente-worker"
+version = "0.3.0"
+description = "Vendeur WhatsApp de la boutique Pagnes de Dantokpa (Cloudflare Python Worker)"
+requires-python = ">=3.12"
+dependencies = [
+    "httpx",
+]
+
+[dependency-groups]
+dev = [
+    "workers-py",
+    "workers-runtime-sdk",
+]

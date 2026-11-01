@@ -1,0 +1,171 @@
+{
+  "question": "Bonsoir ! Je suis à Montréal. Vous avez du wax Vlisco bleu ? J'en voudrais 2 pièces livrées chez ma sœur à Abomey-Calavi. Ça fait combien en tout, et en dollars canadiens ?",
+  "reponse": "Bonsoir ! 🌙\n\nNous avons le *Pagne wax Vlisco « Œil de mon rival »* en bleu. Voici le récapitulatif pour 2 pièces livrées à Abomey-Calavi :\n\n• *Articles* : 2 x Pagne wax Vlisco\n• *Total* : 51 500 FCFA (≈ 122,36 CAD)\n• *Frais de livraison* : 1 500 FCFA\n• *Délai de livraison* : 24 h\n\nJe valide ? 😊",
+  "resume": {
+    "duree_s": 8.72,
+    "nb_etapes": 6,
+    "appels_llm": 5,
+    "outils": [
+      "chercher_produit",
+      "verifier_stock",
+      "calculer_livraison",
+      "convertir_devise"
+    ],
+    "tokens_entree": 7970,
+    "tokens_sortie": 224
+  },
+  "etapes": [
+    {
+      "type": "outil",
+      "agent": "vendeuse",
+      "outil": "chercher_produit",
+      "arguments": {
+        "requete": "wax Vlisco bleu",
+        "categorie": "pagne"
+      },
+      "resultat": {
+        "resultats": [
+          {
+            "id": "P001",
+            "nom": "Pagne wax Vlisco « Œil de mon rival »",
+            "prix_xof": 25000,
+            "unite": "pièce de 6 yards",
+            "couleurs": [
+              "bleu",
+              "orange"
+            ],
+            "disponible": true
+          },
+          {
+            "id": "P002",
+            "nom": "Pagne wax Vlisco « Alphabet »",
+            "prix_xof": 27000,
+            "unite": "pièce de 6 yards",
+            "couleurs": [
+              "jaune",
+              "noir"
+            ],
+            "disponible": false
+          },
+          {
+            "id": "P003",
+            "nom": "Pagne wax Hitarget motif fleurs",
+            "prix_xof": 9000,
+            "unite": "pièce de 6 yards",
+            "couleurs": [
+              "rouge",
+              "vert"
+            ],
+            "disponible": true
+          },
+          {
+            "id": "P004",
+            "nom": "Pagne Woodin « Soleil »",
+            "prix_xof": 15000,
+            "unite": "pièce de 6 yards",
+            "couleurs": [
+              "jaune",
+              "bleu"
+            ],
+            "disponible": true
+          },
+          {
+            "id": "P006",
+            "nom": "Bazin riche brodé",
+            "prix_xof": 18000,
+            "unite": "pièce de 5 mètres",
+            "couleurs": [
+              "blanc",
+              "bleu ciel"
+            ],
+            "disponible": true
+          }
+        ]
+      },
+      "duree_ms": 0,
+      "n": 1
+    },
+    {
+      "type": "outil",
+      "agent": "vendeuse",
+      "outil": "verifier_stock",
+      "arguments": {
+        "produit_id": "P001",
+        "quantite": 2
+      },
+      "resultat": {
+        "produit_id": "P001",
+        "nom": "Pagne wax Vlisco « Œil de mon rival »",
+        "quantite_demandee": 2,
+        "stock_disponible": 8,
+        "disponible": true
+      },
+      "duree_ms": 1,
+      "n": 2
+    },
+    {
+      "type": "outil",
+      "agent": "vendeuse",
+      "outil": "calculer_livraison",
+      "arguments": {
+        "zone": "Abomey-Calavi",
+        "articles": [
+          {
+            "produit_id": "P001",
+            "quantite": 2
+          }
+        ]
+      },
+      "resultat": {
+        "zone": "abomey-calavi",
+        "delai": "24 h",
+        "lignes": [
+          {
+            "produit_id": "P001",
+            "nom": "Pagne wax Vlisco « Œil de mon rival »",
+            "quantite": 2,
+            "prix_unitaire_xof": 25000,
+            "montant_xof": 50000
+          }
+        ],
+        "sous_total_articles_xof": 50000,
+        "frais_livraison_xof": 1500,
+        "total_xof": 51500
+      },
+      "duree_ms": 1,
+      "n": 3
+    },
+    {
+      "type": "outil",
+      "agent": "vendeuse",
+      "outil": "convertir_devise",
+      "arguments": {
+        "montant": 51500,
+        "devise_cible": "CAD"
+      },
+      "resultat": {
+        "montant_source": 51500,
+        "devise_source": "XOF",
+        "montant_converti": 122.36,
+        "devise_cible": "CAD",
+        "taux": 0.002376,
+        "date_taux": "Sat, 31 Oct 2026 00:02:31 +0000",
+        "source_taux": "open.er-api.com"
+      },
+      "duree_ms": 107,
+      "n": 4
+    },
+    {
+      "type": "evaluation",
+      "agent": "règles",
+      "verdict": "✅ règles OK",
+      "detail": "",
+      "n": 5
+    },
+    {
+      "type": "reponse_finale",
+      "detail": "295 caractères",
+      "n": 6
+    }
+  ]
+}

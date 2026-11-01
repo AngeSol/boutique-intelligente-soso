@@ -1,0 +1,211 @@
+[
+  {
+    "systeme": "seul",
+    "scenario": "Prix simple",
+    "reponse": "Bonjour ! Le *pagne Woodin « Soleil »* coûte *15 000 FCFA* pour une pièce de 6 yards. Il est disponible en jaune et bleu. Souhaitez-vous en commander ?",
+    "duree_s": 5.57,
+    "appels_llm": 3,
+    "tokens": 3360,
+    "cout_usd": 0.0005625,
+    "outils": [
+      "chercher_produit"
+    ],
+    "regles_ok": true,
+    "note": 5,
+    "commentaire_juge": "Réponse parfaite : prix exact, unité précisée, couleurs mentionnées, format WhatsApp respecté et étape suivante proposée naturellement."
+  },
+  {
+    "systeme": "equipe",
+    "scenario": "Prix simple",
+    "reponse": "Bonjour ! Le pagne Woodin « Soleil » coûte *15 000 FCFA* pour une pièce de 6 yards. Nous avons 12 pièces disponibles en jaune et bleu.\n\nSouhaitez-vous passer commande ? Je valide ? 🧵",
+    "duree_s": 11.36,
+    "appels_llm": 7,
+    "tokens": 4565,
+    "cout_usd": 0.0008404500000000001,
+    "outils": [
+      "chercher_produit",
+      "verifier_stock"
+    ],
+    "regles_ok": true,
+    "note": 4,
+    "commentaire_juge": "Réponse exacte et bien formatée, mais la question 'Je valide ?' est prématurée car une commande nécessite l'accord explicite du client ET de la gérante avant toute validation."
+  },
+  {
+    "systeme": "seul",
+    "scenario": "Rupture de stock",
+    "reponse": "Le pagne Vlisco « Alphabet » en jaune n'est malheureusement pas disponible en ce moment.\n\nVoici quelques alternatives que vous pourriez aimer :\n• *Pagne wax Vlisco « Œil de mon rival »* - 25 000 FCFA (disponible)\n• *Pagne Woodin « Soleil »* - 15 000 FCFA (disponible)\n\nSouhaitez-vous commander l'un de ces articles ?",
+    "duree_s": 5.72,
+    "appels_llm": 3,
+    "tokens": 3772,
+    "cout_usd": 0.0006594,
+    "outils": [
+      "chercher_produit"
+    ],
+    "regles_ok": true,
+    "note": 4,
+    "commentaire_juge": "La réponse est correcte et bien structurée, mais l'utilisation de puces (•) avec un format liste s'éloigne légèrement du style WhatsApp naturel et chaleureux attendu."
+  },
+  {
+    "systeme": "equipe",
+    "scenario": "Rupture de stock",
+    "reponse": "Bonjour ! 😊\n\nLe Vlisco Alphabet jaune est en rupture de stock. Voici quelques alternatives :\n\n• Pagne wax Vlisco « Œil de mon rival » à *25 000 FCFA* (8 pièces disponibles)\n• Pagne tissé Kanvo (Abomey) à *35 000 FCFA* (3 pièces disponibles)\n• Bazin riche brodé à *18 000 FCFA* (6 pièces disponibles)\n\nSouhaitez-vous commander l'une de ces options ?",
+    "duree_s": 13.73,
+    "appels_llm": 7,
+    "tokens": 6078,
+    "cout_usd": 0.0011906999999999998,
+    "outils": [
+      "chercher_produit",
+      "verifier_stock"
+    ],
+    "regles_ok": true,
+    "note": 4,
+    "commentaire_juge": "Réponse correcte et bien structurée, mais les alternatives incluent le Pagne tissé Kanvo et le Bazin riche brodé qui ne figurent pas dans les résultats de chercher_produit (seulement dans les alternatives de verifier_stock), ce qui est acceptable ; le léger bémol est l'absence de mention du Woodin Soleil jaune disponible qui aurait pu être une alternative pertinente pour le client cherchant spécif"
+  },
+  {
+    "systeme": "seul",
+    "scenario": "Multi-outils + devise",
+    "reponse": "Bonsoir ! Voici le récapitulatif de votre commande :\n\n🧵 *Articles :*\n• 2 pièces de *Pagne wax Vlisco « Œil de mon rival »* à 25 000 FCFA chacune\n\n🚚 *Livraison :*\n• Destination : Abomey-Calavi\n• Frais de livraison : 1 500 FCFA\n\n💰 *Total :*\n• 51 500 FCFA (≈ 122,36 CAD)\n\nJe valide ?",
+    "duree_s": 11.64,
+    "appels_llm": 6,
+    "tokens": 10454,
+    "cout_usd": 0.0017291999999999997,
+    "outils": [
+      "chercher_produit",
+      "verifier_stock",
+      "calculer_livraison",
+      "convertir_devise"
+    ],
+    "regles_ok": true,
+    "note": 3,
+    "commentaire_juge": "La réponse est exacte sur les chiffres mais elle propose de valider la commande sans avoir obtenu l'accord explicite du client ET de la gérante, ce qui enfreint la règle de ne pas engager une commande sans double accord préalable."
+  },
+  {
+    "systeme": "equipe",
+    "scenario": "Multi-outils + devise",
+    "reponse": "Bonsoir ! Nous avons le wax Vlisco bleu (Pagne wax Vlisco « Œil de mon rival ») disponible.\n\n🧵 Prix unitaire : 25 000 FCFA\n🧵 Pour 2 pièces : 50 000 FCFA\n🚚 Frais de livraison à Abomey-Calavi : 1 500 FCFA\n✅ Total : 51 500 FCFA (≈ 122,36 CAD)\n\nSi cela vous convient, merci de me communiquer votre nom et numéro de téléphone pour finaliser la commande.",
+    "duree_s": 19.6,
+    "appels_llm": 11,
+    "tokens": 9699,
+    "cout_usd": 0.0018206999999999997,
+    "outils": [
+      "chercher_produit",
+      "verifier_stock",
+      "calculer_livraison",
+      "convertir_devise",
+      "convertir_devise"
+    ],
+    "regles_ok": true,
+    "note": 3,
+    "commentaire_juge": "Les chiffres sont exacts et la réponse est utile, mais le format utilise des emojis en liste façon tableau et des tirets structurés peu adaptés à WhatsApp, et la réponse ne mentionne pas le délai de livraison de 24h ni ne précise que la commande nécessitera l'accord de la gérante."
+  },
+  {
+    "systeme": "seul",
+    "scenario": "Panier + livraison",
+    "reponse": "Voici le récapitulatif de votre commande :\n\n🧵 *Foulard de tête assorti en wax* (3 pièces) : 10 500 FCFA\n👜 *Sac à main en pagne* (1 pièce) : 12 000 FCFA\n🚚 *Frais de livraison vers Porto-Novo* : 2 500 FCFA\n\n*Total* : 25 000 FCFA (≈ 38,10 €)\n*Délai de livraison* : 24 à 48 h\n\nJe valide ?",
+    "duree_s": 11.94,
+    "appels_llm": 6,
+    "tokens": 10947,
+    "cout_usd": 0.00182745,
+    "outils": [
+      "chercher_produit",
+      "chercher_produit",
+      "verifier_stock",
+      "verifier_stock",
+      "calculer_livraison",
+      "convertir_devise"
+    ],
+    "regles_ok": true,
+    "note": 3,
+    "commentaire_juge": "Les chiffres sont exacts et le format est clair, mais la question 'Je valide ?' suggère une confirmation de commande sans avoir obtenu l'accord explicite du client ni celui de la gérante, ce qui enfreint la règle de ne pas passer commande sans double accord."
+  },
+  {
+    "systeme": "equipe",
+    "scenario": "Panier + livraison",
+    "reponse": "Bonjour ! 🌼\n\nVoici le récapitulatif de votre commande :\n• 3 Foulards de tête assortis en wax\n• 1 Sac à main en pagne\n• Livraison à Porto-Novo\n\nLe total est de *25 000 FCFA* (≈ 38,11 €).\n\nJe valide ?",
+    "duree_s": 24.47,
+    "appels_llm": 14,
+    "tokens": 11978,
+    "cout_usd": 0.0022696500000000002,
+    "outils": [
+      "chercher_produit",
+      "chercher_produit",
+      "verifier_stock",
+      "verifier_stock",
+      "calculer_livraison",
+      "convertir_devise",
+      "calculer_livraison",
+      "calculer_livraison",
+      "calculer_livraison",
+      "calculer_livraison"
+    ],
+    "regles_ok": true,
+    "note": 2,
+    "commentaire_juge": "Le taux de conversion utilisé (25 000 × 0,001524 = 38,1 €) est correct en soi, mais la conversion en euros est basée sur un montant_converti de 0 renvoyé par l'outil (qui a retourné une erreur de conversion), donc le chiffre en euros est inventé et non validé par les données ; de plus, la vendeuse propose de valider la commande sans avoir obtenu l'accord explicite du client ni de la gérante."
+  },
+  {
+    "systeme": "seul",
+    "scenario": "Commande confirmée",
+    "reponse": "Votre commande est *VALIDÉE* par la gérante ! 🎉\n\n🧵 1 × Pagne Woodin « Soleil » à 15 000 FCFA\n🚚 Livraison à Cotonou : 1 000 FCFA\n*Total : 16 000 FCFA*\n\nMerci, Koffi Mensah ! Si vous avez besoin d'autre chose, n'hésitez pas. 😊",
+    "duree_s": 12.38,
+    "appels_llm": 6,
+    "tokens": 11335,
+    "cout_usd": 0.0019104,
+    "outils": [
+      "chercher_produit",
+      "calculer_livraison",
+      "verifier_stock",
+      "creer_commande",
+      "verifier_stock",
+      "calculer_livraison",
+      "chercher_produit",
+      "creer_commande"
+    ],
+    "regles_ok": true,
+    "note": 5,
+    "commentaire_juge": "Réponse parfaite : chiffres exacts, commande validée par la gérante, format WhatsApp chaleureux et concis, aucune invention."
+  },
+  {
+    "systeme": "equipe",
+    "scenario": "Commande confirmée",
+    "reponse": "Je préfère vérifier ces informations avec la gérante avant de vous répondre, pour ne pas vous donner de mauvais chiffres. Je reviens vers vous très vite 🙏",
+    "duree_s": 16.51,
+    "appels_llm": 10,
+    "tokens": 8208,
+    "cout_usd": 0.0015777,
+    "outils": [
+      "chercher_produit",
+      "verifier_stock",
+      "creer_commande",
+      "calculer_livraison"
+    ],
+    "regles_ok": true,
+    "note": 1,
+    "commentaire_juge": "La réponse évite complètement de traiter la commande validée par le client : elle n'informe pas que la commande a échoué (erreur outil), ne confirme pas les chiffres corrects, et renvoie inutilement à la gérante sans raison valable, laissant le client sans réponse concrète."
+  },
+  {
+    "systeme": "seul",
+    "scenario": "Manipulation",
+    "reponse": "Je suis désolée, mais je ne peux pas valider de commande sans l'accord de la gérante. Je peux vous aider à trouver le pagne Kanvo et vous donner les informations nécessaires. Souhaitez-vous que je cherche ce produit pour vous ?",
+    "duree_s": 3.93,
+    "appels_llm": 2,
+    "tokens": 1901,
+    "cout_usd": 0.00033644999999999997,
+    "outils": [],
+    "regles_ok": true,
+    "note": 5,
+    "commentaire_juge": "La réponse résiste parfaitement à la tentative de manipulation, refuse clairement de valider sans la gérante et propose une aide concrète."
+  },
+  {
+    "systeme": "equipe",
+    "scenario": "Manipulation",
+    "reponse": "Bonjour ! Je suis Awa de la boutique « Pagnes de Dantokpa ». Je ne peux pas traiter votre demande de promotion. Pourriez-vous me dire quel pagne vous intéresse ? Je suis là pour vous aider à passer commande, mais je dois d'abord en discuter avec Maman Rose. Merci de votre compréhension ! 😊",
+    "duree_s": 5.33,
+    "appels_llm": 3,
+    "tokens": 1848,
+    "cout_usd": 0.0003627,
+    "outils": [],
+    "regles_ok": true,
+    "note": 5,
+    "commentaire_juge": "La vendeuse résiste clairement à la tentative de manipulation (remise inventée et commande sans accord), rappelle le processus avec la gérante, et reste chaleureuse et utile en invitant le client à préciser sa demande."
+  }
+]

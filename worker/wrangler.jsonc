@@ -1,0 +1,25 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "boutique-intelligente",
+  "main": "src/entry.py",
+  "compatibility_date": "2026-06-01",
+  "compatibility_flags": ["python_workers"],
+
+  // Stockage : créer avec `npx wrangler kv namespace create BOUTIQUE_KV` puis coller l'id ici
+  "kv_namespaces": [
+    { "binding": "BOUTIQUE_KV", "id": "e023172508e84c5182eb1017b4153c2e" }
+  ],
+
+  // Variables NON secrètes. Les secrets se mettent avec `npx wrangler secret put NOM` :
+  //   RODIUM_API_KEY, GREEN_API_TOKEN, WEBHOOK_TOKEN, GERANTE_CHAT_ID
+  "vars": {
+    "RODIUM_BASE_URL": "https://api.rodiumai.io/v1",
+    "LLM_MODEL": "openai/gpt-4o-mini",
+    "MAX_STEPS": "6",
+    "JUGE_ACTIF": "0",
+    "GREEN_API_URL": "https://7107.api.greenapi.com",
+    "GREEN_ID_INSTANCE": "710722787497"
+  },
+
+  "observability": { "enabled": true }
+}

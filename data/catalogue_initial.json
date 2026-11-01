@@ -1,0 +1,15 @@
+{
+  "devise": "XOF",
+  "produits": [
+    {"id": "P001", "nom": "Pagne wax Vlisco « Œil de mon rival »", "categorie": "pagne", "prix": 25000, "unite": "pièce de 6 yards", "couleurs": ["bleu", "orange"], "stock": 8},
+    {"id": "P002", "nom": "Pagne wax Vlisco « Alphabet »", "categorie": "pagne", "prix": 27000, "unite": "pièce de 6 yards", "couleurs": ["jaune", "noir"], "stock": 0},
+    {"id": "P003", "nom": "Pagne wax Hitarget motif fleurs", "categorie": "pagne", "prix": 9000, "unite": "pièce de 6 yards", "couleurs": ["rouge", "vert"], "stock": 25},
+    {"id": "P004", "nom": "Pagne Woodin « Soleil »", "categorie": "pagne", "prix": 15000, "unite": "pièce de 6 yards", "couleurs": ["jaune", "bleu"], "stock": 12},
+    {"id": "P005", "nom": "Pagne tissé Kanvo (Abomey)", "categorie": "pagne", "prix": 35000, "unite": "ensemble 3 pièces", "couleurs": ["or", "vert", "rouge"], "stock": 3},
+    {"id": "P006", "nom": "Bazin riche brodé", "categorie": "pagne", "prix": 18000, "unite": "pièce de 5 mètres", "couleurs": ["blanc", "bleu ciel"], "stock": 6},
+    {"id": "A001", "nom": "Foulard de tête assorti en wax", "categorie": "accessoire", "prix": 3500, "unite": "pièce", "couleurs": ["multicolore"], "stock": 30},
+    {"id": "A002", "nom": "Sac à main en pagne", "categorie": "accessoire", "prix": 12000, "unite": "pièce", "couleurs": ["bleu", "orange", "rouge"], "stock": 5},
+    {"id": "A003", "nom": "Sandales cuir et wax", "categorie": "accessoire", "prix": 8500, "unite": "paire", "couleurs": ["marron", "noir"], "stock": 0},
+    {"id": "A004", "nom": "Collier de perles du Bénin", "categorie": "accessoire", "prix": 6000, "unite": "pièce", "couleurs": ["multicolore"], "stock": 15}
+  ]
+}
